@@ -10,13 +10,20 @@ import { Observable } from 'rxjs';
 export class AuthGuard implements CanActivate {
 
     constructor(
-        private oauthService: OAuthService) { }
+        private oauthService: OAuthService,
+        private router: Router ) { }
 
     canActivate(
       route: ActivatedRouteSnapshot,
       state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         var hasIdToken = this.oauthService.hasValidIdToken();
         var hasAccessToken = this.oauthService.hasValidAccessToken();
-        return (hasIdToken && hasAccessToken);
+        if (hasIdToken && hasAccessToken){
+          return true;
+        }
+        else{
+          this.router.navigate(["/welcome"]);
+          return false;
+        }
         }
 }
